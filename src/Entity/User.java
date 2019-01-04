@@ -75,6 +75,14 @@ public Comparator<User> comparator=new Comparator<User>() {
 		this.gridIdentifier=Hilbert(n);
 	}
 	
+	public User(double x,double y,QuerySpace querySpace){
+		this.x=x;
+		this.y=y;
+		this.gridx=(int) (x-querySpace.getStartx())/querySpace.getXgrid();
+		this.gridy=(int) (y-querySpace.getStarty())/querySpace.getYgrid();
+
+	}
+	
 	public Map<String, Object> generateMSG(){
 		Map<String, Object> MSGu2a=new HashMap<String, Object>();
 		MSGu2a.put("ID",userID );
