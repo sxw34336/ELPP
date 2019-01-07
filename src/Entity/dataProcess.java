@@ -39,5 +39,28 @@ public class dataProcess {
 			}
 		return pointList;
 	}
-
+	
+	public Map<Integer, Object> gridGen(QuerySpace querySpace,int n,List<User> userList){
+		Map<Integer, Object> gridMap=new HashMap<>();
+		for(int i=0;i<n;i++){
+			for(int j=0;j<n;j++){
+				Grid grid=new Grid(j, i, n);
+				List<User> inList=new ArrayList<>();
+				for(User user:userList){
+					if(user.getGridIdentifier()==grid.getGridIdentifier()){
+						inList.add(user);
+						
+					}
+				}
+				grid.setUserList(inList);
+				gridMap.put(grid.getGridIdentifier(), grid);
+			}
+		}
+		return gridMap;
+		
+	}
+	
+	
+	
+	
 }

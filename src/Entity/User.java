@@ -2,6 +2,7 @@ package Entity;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class User {
@@ -14,6 +15,7 @@ public class User {
 	private QuerySpace querySpace;//当前用户的查询空间
 	private int gridIdentifier;//网格标识
 	private int STP;
+	private List<User> kanonymityUsers;
 	private Map<String, Double> offset;//用户相对于所在网格的偏移量
 	
 	/**
@@ -154,6 +156,12 @@ public Comparator<User> comparator=new Comparator<User>() {
 	}
 	public void setOffset(Map<String, Double> offset) {
 		this.offset = offset;
+	}
+	public List<User> getKanonymityUsers() {
+		return kanonymityUsers;
+	}
+	public void setKanonymityUsers(List<User> kanonymityUsers) {
+		this.kanonymityUsers = kanonymityUsers;
 	}
 	
 }
