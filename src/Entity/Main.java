@@ -21,8 +21,8 @@ public class Main {
 			System.out.println("start");
 			for(User user:userList){
 				long time1=System.currentTimeMillis();
-				anonymizer.createKAnonymity2(userList, wait, 50, user,gridMap);
-				List<User> kanonymityList=anonymizer.createKAnonymity(userList, wait, 50, user);//匿名器生成k匿名
+				List<User> kanonymityList=anonymizer.createKAnonymity2(userList, wait, 60, n,user,gridMap);//匿名器生成k匿名、
+				//Map<String, Double> kanonymityArea=anonymizer.createAnonymityArea(kanonymityList);
 				long time2=System.currentTimeMillis();
 				List<User> result=lbs.getSearchResult(kanonymityList, 3, userList);//lbs查询匿名区域的poi
 				long time3=System.currentTimeMillis();

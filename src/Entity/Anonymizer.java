@@ -36,7 +36,7 @@ public class Anonymizer {
 	 * @param user 当前用户
 	 * @return
 	 */
-		public List<User> searchKnn(User user,int k,List<User> userList){
+	 public List<User> searchKnn(User user,int k,List<User> userList){
 			List<User> candidate=new ArrayList<User>();
 			List<User> kanonymityList=new ArrayList<User>();
 			List<Area> kanonymityAreas=new ArrayList<>();
@@ -67,7 +67,36 @@ public class Anonymizer {
 			kanonymityList=topkList;
 			return kanonymityList;
 		}
-	 
+		
+		
+	public List<User> searchKnn2(User user,int k,List<User> poiList){
+		List<User> candidate=new ArrayList<User>();
+		List<User> userresult=new ArrayList<User>();
+		List<User> topkList=new ArrayList<>();
+		Iterator<User> iterator=poiList.iterator();
+		while(iterator.hasNext()){
+			User poi=iterator.next();	
+			if(user.getUserID()!=poi.getUserID()){
+				candidate.add(poi);	
+			}
+		}
+		for(int j=0;j<k;j++){
+			topkList.add(candidate.get(j));
+		}
+		//System.out.println("topk:"+topkList.size());
+		createHeap(user,k, topkList);
+		for(int z=k;z<candidate.size();z++){
+			if(getDistance(user,candidate.get(z))<getDistance(user,topkList.get(0))){
+				topkList.set(0, candidate.get(z));
+				UpToDown(user,1, k, topkList);
+			}
+		}
+		userresult=topkList;
+		//System.out.println("user:"+user.getUserID()+"   "+userresult);
+		return userresult;
+	}
+		
+		
 	public List<User> createKAnonymity(List<User> userList,int wait,int k,User user){
 		List<User> candidateList=new ArrayList<User>();
 		List<User> kanonymityList=new ArrayList<User>();
@@ -92,18 +121,18 @@ public class Anonymizer {
 		}	
 	}
 	
-	public List<User> createKAnonymity2(List<User> userList,int wait,int k,User user,Map<Integer, Object> gridMap){
+	public List<User> createKAnonymity2(List<User> userList,int wait,int k,int n,User user,Map<Integer, Object> gridMap){
 		List<User> candidateList=new ArrayList<User>();
 		List<User> kanonymityList=new ArrayList<User>();	
 		Grid grid=(Grid) gridMap.get(user.getGridIdentifier());
 		candidateList= grid.getUserList();
 		int count=candidateList.size();
 		if(count>k-1){
-			searchKnn(user, k-1, candidateList);
+			kanonymityList=searchKnn(user, k-1, candidateList);
 			return kanonymityList;	
 		}else {
 			while(count<k-1){
-				User waitUser=new User(user.getX(), user.getY(),user.getQuerySpace()); 
+				User waitUser=new User(user.getX(), user.getY(),n,user.getQuerySpace()); 
 				waitUser.setUserID(wait++);
 				candidateList.add(waitUser);
 				count++;
@@ -186,7 +215,7 @@ public class Anonymizer {
 	
 	public List<User> filterResult(List<User> beforeresult,User user,int k){
 		List<User> afterresult=new ArrayList<>();
-		//afterresult=searchKnn(user, k, beforeresult);
+		afterresult=searchKnn2(user, k, beforeresult);
 		return afterresult;
 	}
 	
