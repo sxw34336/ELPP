@@ -9,6 +9,7 @@ public class Main {
 	public static void main(String args[]){
 		long sum=0;
 		int n=128;
+		int averageCC=0;
 		for(int i=0;i<10;i++){
 			dataProcess data=new dataProcess();
 			QuerySpace querySpace=new QuerySpace(400,4300,21900,30800,n);
@@ -17,23 +18,30 @@ public class Main {
 			LBS lbs=new LBS();
 			Anonymizer anonymizer=new Anonymizer();
 			long sumtime=0;
+			int k=60;
+			int communication=0;
 			int wait=userList.size();
 			System.out.println("start");
 			for(User user:userList){
 				long time1=System.currentTimeMillis();
-				List<User> kanonymityList=anonymizer.createKAnonymity2(userList, wait, 60, n,user,gridMap);//匿名器生成k匿名、
+				List<User> kanonymityList=anonymizer.createKAnonymity2(userList, wait, k, n,user,gridMap);//匿名器生成k匿名
 				//Map<String, Double> kanonymityArea=anonymizer.createAnonymityArea(kanonymityList);
 				long time2=System.currentTimeMillis();
-				List<User> result=lbs.getSearchResult(kanonymityList, 3, userList);//lbs查询匿名区域的poi
+				communication+=k;
+				List<User> result=lbs.getSearchResult(kanonymityList, 4, userList);//lbs查询匿名区域的poi
+				communication+=result.size();
 				long time3=System.currentTimeMillis();
-				List<User> afterList=anonymizer.filterResult(result, user, 3);
+				List<User> afterList=anonymizer.filterResult(result, user, 4);
 				long time4=System.currentTimeMillis();
+				communication+=afterList.size();
 				long exetime=time2-time1+time4-time3;
 				sumtime+=exetime;
 			}
+			averageCC+=communication;
 			sum+=sumtime;
-			System.out.println("匿名器运行时间："+sumtime+" ms");
+			//System.out.println("匿名器运行时间："+sumtime+" ms");
 		}
+		System.out.println("平均通信量："+averageCC/10);
 		System.out.println("平均运行时间："+sum/10+" ms");
 		
 		/*for(int i=0;i<10;i++){
